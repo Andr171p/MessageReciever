@@ -25,7 +25,7 @@ class RedisGetData:
             numbers.append(await self.redis.hget(key, 'telefon'))
             pay_links.append(await self.redis.hget(key, 'pay_link'))
             projects.append(await self.redis.hget(key, 'project'))
-        return zip(values, numbers, pay_links, projects)
+        return zip(keys, values, numbers, pay_links, projects)
 
     async def get_data(self) -> List[dict]:
         keys = await self.keys()
