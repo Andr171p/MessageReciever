@@ -29,7 +29,7 @@ class SendMessage:
         for message in data:
             logger.info(message)
             body = dict_to_json(_dict=message)
-            cls.rmq.publish(message=body)
+            await cls.rmq.publish(message=body)
             logger.info(logs_info.SEND_TO_RMQ)
 
 

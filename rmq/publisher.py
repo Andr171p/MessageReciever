@@ -1,18 +1,22 @@
+import aio_pika
+
 from rmq.settings.queue_config import queue_config
 from rmq.connection import RMQConnection
 
-import logging
-
-
-logging.basicConfig(level=logging.INFO)
+from loguru import logger
 
 
 class RMQPublishMessage(RMQConnection):
 
-    def publish(self, message: str) -> None:
-        self.channel.basic_publish(
-            exchange='',
-            routing_key=queue_config.queue_name,
-            body=message
+    @classmethod
+    async def publish(cls, message: str) -> None:
+        if cls.channel is None:
+            await cls.connect()
+        await cls.channel.default_exchange.publish(
+            aio_pika.Message(
+                body=message.encode()
+            ),
+            routing_key=queue_config.queue_name
         )
-        logging.info(f"[{queue_config.queue_name}] SENT: {message}")
+        logger.info(f"[{queue_config.queue_name}] SENT: {message}")
+        await cls.close()

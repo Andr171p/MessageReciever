@@ -2,26 +2,22 @@ from service.session import Periodic
 from service.tasks import send_status
 from service.settings.config import service_config
 
-
-import logging
-
-
-logging.basicConfig(level=logging.INFO)
+from loguru import logger
 
 
 async def start() -> None:
     periodic = Periodic(
-        func=await send_status(),
+        func=send_status,
         timeout=service_config.TIMEOUT
     )
     try:
-        logging.info("SERVICE WAS STARTED...")
+        logger.info("SERVICE WAS STARTED...")
         await periodic.start()
     except Exception as _ex:
-        logging.info("SERVICE ERROR")
-        logging.warning(_ex)
+        logger.info("SERVICE ERROR")
+        logger.warning(_ex)
         await periodic.stop()
-        logging.info("SERVICE WAS STOPPED")
+        logger.info("SERVICE WAS STOPPED")
     finally:
         await periodic.stop()
-        logging.info("SERVICE WAS STOPPED")
+        logger.info("SERVICE WAS STOPPED")

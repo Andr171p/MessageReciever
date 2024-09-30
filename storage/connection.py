@@ -6,7 +6,7 @@ from storage.settings.network import ConnectData
 
 class RedisConnection:
     REDIS_URL = ConnectData.REDIS_URL
-    redis = None
+    redis: Redis = None
 
     @classmethod
     async def connect(cls) -> Redis:
@@ -15,5 +15,5 @@ class RedisConnection:
 
     @classmethod
     async def close(cls) -> None:
-        cls.redis.close()
-        await cls.redis.wait_closed()
+        await cls.redis.close()
+        # await cls.redis.wait_closed()

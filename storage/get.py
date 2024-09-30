@@ -3,7 +3,7 @@ from storage.settings.cluster import ClusterConfig
 from storage.struct import RedisMessageStruct
 from storage.utils import is_new
 
-from typing import List, Any
+from typing import List
 
 
 class RedisGetData:
@@ -14,15 +14,17 @@ class RedisGetData:
     ) -> None:
         self.redis = redis
 
-    async def keys(self) -> Any:
+    async def keys(self) -> list:
         keys = await self.redis.keys('*')
         return keys
 
-    async def zipped_data(self, keys: Any) -> zip:
-        values = [await self.redis.hget(key, "value") for key in keys]
-        numbers = [await self.redis.hget(key, "telefon") for key in keys]
-        pay_links = [await self.redis.hget(key, "pay_link") for key in keys]
-        projects = [await self.redis.hget(key, "project") for key in keys]
+    async def zipped_data(self, keys: list) -> zip:
+        values, numbers, pay_links, projects = [], [], [], []
+        for key in keys:
+            values.append(await self.redis.hget(key, 'value'))
+            numbers.append(await self.redis.hget(key, 'telefon'))
+            pay_links.append(await self.redis.hget(key, 'pay_link'))
+            projects.append(await self.redis.hget(key, 'project'))
         return zip(values, numbers, pay_links, projects)
 
     async def get_data(self) -> List[dict]:
@@ -37,4 +39,5 @@ class RedisGetData:
                 timeout=self.EXPIRE_TIMEOUT
             )
         ]
+        await self.redis.close()
         return data

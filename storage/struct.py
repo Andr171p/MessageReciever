@@ -10,18 +10,20 @@ class RedisDataSchema(BaseModel):
 
 
 class RedisMessageStruct:
-    def __init__(self, key, value, phone, pay_link, project) -> None:
-        self.key = key.decode('utf-8')
-        self.value = value.decode('utf-8')
-        self.phone = phone.decode('utf-8')
-        self.pay_link = pay_link.decode('utf-8')
-        self.project = project.decode('utf-8')
+    def __init__(
+            self, key: bytes | str, value: bytes | str, phone: bytes | str, pay_link: bytes | str, project: bytes | str
+    ) -> None:
+        self.__key = key.decode('utf-8')
+        self.__value = value.decode('utf-8')
+        self.__phone = phone.decode('utf-8')
+        self.__pay_link = pay_link.decode('utf-8')
+        self.__project = project.decode('utf-8')
 
     def data(self) -> dict[str, str]:
         return {
-            'key': self.key,
-            'message': self.value,
-            'phone': self.phone,
-            'pay_link': self.pay_link,
-            'project': self.project
+            'key': self.__key,
+            'message': self.__value,
+            'phone': self.__phone,
+            'pay_link': self.__pay_link,
+            'project': self.__project
         }
