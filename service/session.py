@@ -19,9 +19,9 @@ class Periodic:
     async def stop(self) -> None:
         if self.is_started:
             self.is_started = False
-            self._task.cancel()
-            with suppress(asyncio.CancelledError):
-                await self._task
+            # self._task.cancel()
+            # with suppress(asyncio.CancelledError):
+            # await self._task
 
     async def _run(self) -> None:
         while True:
